@@ -25,7 +25,7 @@ import android.widget.ImageView;
  * @auther tb
  * @time 2018/2/24 上午10:50
  * @desc 圆形，圆角，带边框，高斯模糊。。。
- * TODO 椭圆待加入。。。
+ * TODO 椭圆、利用path绘制各种图案的待加入。。。
  * <a href="http://blog.csdn.net/binbinqq86/article/details/78329238">另外一种绘制方式</a>
  */
 @SuppressLint("AppCompatCustomView")
@@ -238,6 +238,10 @@ public class BaseImageView extends ImageView {
     /**
      * 获取imageview设置的图片（针对大图，此时必须已经处理过了，否则会造成内存溢出）
      *
+     * 获取bitmap：
+     * 1、如果设置了src为图片则返回该图片，
+     * 2、如果设置了src为颜色值则返回颜色值，
+     * 3、如果没有设置src，则返回默认颜色值（未设置则为透明）
      * @param drawable
      * @return
      */
