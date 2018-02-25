@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <declare-styleable name="baselib_BaseImageView">
+        <!--左上角圆角的弧度-->
+        <attr name="baselib_left_top" format="dimension" />
+        <!--右上角圆角的弧度-->
+        <attr name="baselib_right_top" format="dimension" />
+        <!--左下角圆角的弧度-->
+        <attr name="baselib_left_bottom" format="dimension" />
+        <!--右下角圆角的弧度-->
+        <attr name="baselib_right_bottom" format="dimension" />
+        <!--默认矩形，下面三种情况==========================================================-->
+        <!--是否是部分圆角图片-->
+        <attr name="baselib_is_partly_corner" format="boolean" />
+        <!--是否是全圆角图片-->
+        <attr name="baselib_is_round_corner" format="boolean" />
+        <!--是否是圆形图片-->
+        <attr name="baselib_is_circle" format="boolean" />
+        <!--=====================上面是互斥的属性，下面的可以与上面的共存=====================-->
+        <!--是否带边框-->
+        <attr name="baselib_has_border" format="boolean" />
+        <!--边框颜色-->
+        <attr name="baselib_border_color" format="color|reference" />
+        <!--边框宽度-->
+        <attr name="baselib_border_width" format="dimension" />
+        <!--圆角的度数（代表所有角，如果不单独配置上下左右的话）-->
+        <attr name="baselib_corner" format="dimension" />
+        <!--是否高斯模糊-->
+        <attr name="baselib_is_blur" format="boolean" />
+        <!--高斯模糊半径-->
+        <attr name="baselib_blur_radius" format="float" />
+        <!--当图片为空的时候，默认颜色-->
+        <attr name="baselib_default_color" format="color|reference" />
+    </declare-styleable>
+</resources>
