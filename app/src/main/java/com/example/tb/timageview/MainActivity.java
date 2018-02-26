@@ -11,8 +11,7 @@ public class MainActivity extends AppCompatActivity {
 
     private CheckBox cb;
     private Button circle;
-    private Button rect;
-    private Button corner;
+    private Button cornerAll,corner1;
     private BaseImageView biv;
 
     @Override
@@ -21,6 +20,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initView();
 
+        if(biv.isHasBorder()){
+            cb.setChecked(true);
+        }
         cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -35,19 +37,19 @@ public class MainActivity extends AppCompatActivity {
         circle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                biv.setCircle(true).setRounderCorner(false).setPartlyCorner(false).reDraw();
+                biv.setCircle(true).setCornerType(null).reDraw();
             }
         });
-        rect.setOnClickListener(new View.OnClickListener() {
+        cornerAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                biv.setCircle(false).setRounderCorner(false).setPartlyCorner(false).reDraw();
+                biv.setCircle(false).setCornerType(BaseImageView.CornerType.ALL).reDraw();
             }
         });
-        corner.setOnClickListener(new View.OnClickListener() {
+        corner1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                biv.setPartlyCorner(false).setRounderCorner(true).setCircle(false).reDraw();
+                biv.setCircle(false).setCornerType(BaseImageView.CornerType.TOP_LEFT).reDraw();
             }
         });
     }
@@ -55,8 +57,8 @@ public class MainActivity extends AppCompatActivity {
     private void initView() {
         cb = (CheckBox) findViewById(R.id.cb);
         circle = (Button) findViewById(R.id.circle);
-        rect = (Button) findViewById(R.id.rect);
-        corner = (Button) findViewById(R.id.corner);
+        corner1 = (Button) findViewById(R.id.corner_1);
+        cornerAll = (Button) findViewById(R.id.corner_all);
         biv = (BaseImageView) findViewById(R.id.biv);
     }
 }

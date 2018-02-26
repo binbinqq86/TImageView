@@ -1,46 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:biv="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.example.tb.timageview.MainActivity">
-
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:biv="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent"
+                                             tools:context="com.example.tb.timageview.MainActivity">
+    
     <CheckBox
         android:id="@+id/cb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="hasBorder"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <LinearLayout
+        app:layout_constraintTop_toTopOf="parent"/>
+    
+    <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         app:layout_constraintTop_toBottomOf="@id/cb">
-
-        <Button
-            android:id="@+id/circle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="circle" />
-
-        <Button
-            android:id="@+id/rect"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="rect" />
-
-        <Button
-            android:id="@+id/corner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="corner" />
-
-    </LinearLayout>
-
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            
+            <Button
+                android:id="@+id/circle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="circle"
+                android:textAllCaps="false"/>
+            
+            <Button
+                android:id="@+id/corner_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="cornerAll"
+                android:textAllCaps="false"/>
+            
+            <Button
+                android:id="@+id/corner_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="corner1"
+                android:textAllCaps="false"/>
+        </LinearLayout>
+    </HorizontalScrollView>
+    
     <com.example.tb.timageview.BaseImageView
         android:id="@+id/biv"
         android:layout_width="300dp"
@@ -52,8 +59,8 @@
         app:layout_constraintTop_toTopOf="parent"
         biv:baselib_border_color="#aa1cD1FF"
         biv:baselib_border_width="10dp"
-        biv:baselib_corner="50dp"
-        biv:baselib_has_border="true"
-        biv:baselib_is_round_corner="true" />
+        biv:baselib_corner="60dp"
+        biv:baselib_corner_type="ALL"
+        biv:baselib_has_border="false"/>
 
 </android.support.constraint.ConstraintLayout>
