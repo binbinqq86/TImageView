@@ -9,6 +9,7 @@
     
     <CheckBox
         android:id="@+id/cb"
+        android:visibility="visible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -16,6 +17,7 @@
         app:layout_constraintTop_toTopOf="parent"/>
     
     <HorizontalScrollView
+        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -53,6 +55,7 @@
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:src="@drawable/p2"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -62,5 +65,10 @@
         biv:baselib_corner="60dp"
         biv:baselib_corner_type="ALL"
         biv:baselib_has_border="false"/>
-
+    
+    <com.example.tb.timageview.Test
+        android:visibility="gone"
+        android:background="@color/colorAccent"
+        android:layout_width="300dp"
+        android:layout_height="300dp"/>
 </android.support.constraint.ConstraintLayout>

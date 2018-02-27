@@ -201,18 +201,19 @@ public class BaseImageView extends ImageView {
                 case TOP_LEFT:
                     //分块绘制，也可以采用path来绘制
                     if (hasBorder) {
-                        path.reset();
-                        path.moveTo(borderWidth,borderWidth+cr+borderWidth);
-                        path.addArc(new RectF(borderWidth, borderWidth, cr * 2f + borderWidth, cr * 2f + borderWidth), 180, 90);
-                        path.lineTo(width-borderWidth,borderWidth);
-                        path.lineTo(width-borderWidth,height-borderWidth);
-                        path.lineTo(borderWidth,height-borderWidth);
-                        path.close();
-                        canvas.drawPath(path,mPaintDrawable);
+//                        path.reset();
+//                        path.moveTo(borderWidth,borderWidth+cr+borderWidth);
+//                        path.addArc(new RectF(borderWidth, borderWidth, cr * 2f + borderWidth, cr * 2f + borderWidth), 180, 90);
+//                        path.lineTo(width-borderWidth,borderWidth);
+//                        path.lineTo(width-borderWidth,height-borderWidth);
+//                        path.lineTo(borderWidth,height-borderWidth);
+//                        path.close();
+//                        canvas.drawPath(path,mPaintDrawable);
+
 //                        canvas.drawRoundRect(new RectF(borderWidth, borderWidth, cr * 2f+borderWidth, cr * 2f+borderWidth),cr,cr,mPaintDrawable);
-//                        canvas.drawArc(new RectF(borderWidth, borderWidth, cr * 2f + borderWidth, cr * 2f + borderWidth), 180, 90, true, mPaintDrawable);
-//                        canvas.drawRect(new RectF(borderWidth, corner, corner, height - borderWidth), mPaintDrawable);
-//                        canvas.drawRect(new RectF(corner, borderWidth, width - borderWidth, height - borderWidth), mPaintDrawable);
+                        canvas.drawArc(new RectF(borderWidth, borderWidth, corner * 2f - borderWidth, cr * 2f + borderWidth), 180, 90, true, mPaintDrawable);
+                        canvas.drawRect(new RectF(borderWidth, corner, corner, height - borderWidth), mPaintDrawable);
+                        canvas.drawRect(new RectF(corner, borderWidth, width - borderWidth, height - borderWidth), mPaintDrawable);
                     } else {
                         //drawRoundRect也可以，不过多绘制了一部分圆
                         canvas.drawRoundRect(new RectF(0, 0, corner * 2f, corner * 2f), corner, corner, mPaintDrawable);
@@ -259,7 +260,7 @@ public class BaseImageView extends ImageView {
             //圆形
             canvas.drawCircle(width / 2f, height / 2f, (width - borderWidth) / 2f, mPaintBorder);
         } else if (cornerType != null) {
-            //半径为圆心到边框中点的距离
+            //半径为圆心到边框中点的距离（空心的情况，圆弧的半径到线宽的中点，而不是边缘!!!）
             float cr = corner - borderWidth / 2f;
             cr = cr > 0 ? cr : 0;
             switch (cornerType) {
@@ -269,14 +270,21 @@ public class BaseImageView extends ImageView {
                     canvas.drawRoundRect(rf, cr, cr, mPaintBorder);
                     break;
                 case TOP_LEFT:
-                    path.reset();
-                    path.moveTo(0, corner);
-                    path.addArc(new RectF(borderWidth / 2f, borderWidth / 2f, cr * 2f, cr * 2f), 180, 90);
-                    path.lineTo(width - borderWidth / 2f, borderWidth / 2f);
-                    path.lineTo(width - borderWidth / 2f, height - borderWidth / 2f);
-                    path.lineTo(borderWidth / 2f, height - borderWidth / 2f);
-                    path.close();
-                    canvas.drawPath(path, mPaintBorder);
+                    //两种方案都可以
+//                    path.reset();
+//                    path.moveTo(0, corner);
+//                    path.addArc(new RectF(borderWidth / 2f, borderWidth / 2f, corner * 2f-borderWidth/2f, corner * 2f-borderWidth/2f), 180, 90);
+//                    path.lineTo(width - borderWidth / 2f, borderWidth / 2f);
+//                    path.lineTo(width - borderWidth / 2f, height - borderWidth / 2f);
+//                    path.lineTo(borderWidth / 2f, height - borderWidth / 2f);
+//                    path.close();
+//                    canvas.drawPath(path, mPaintBorder);
+                    
+                    canvas.drawArc(new RectF(borderWidth / 2f, borderWidth / 2f, corner * 2f - borderWidth / 2f, corner * 2f - borderWidth / 2f), 180, 90, false, mPaintBorder);
+                    canvas.drawLine(corner, borderWidth / 2f, width, borderWidth / 2f, mPaintBorder);
+                    canvas.drawLine(width - borderWidth / 2f, borderWidth, width - borderWidth / 2f, height, mPaintBorder);
+                    canvas.drawLine(width - borderWidth, height - borderWidth / 2f, 0, height - borderWidth / 2f, mPaintBorder);
+                    canvas.drawLine(borderWidth / 2f, height - borderWidth, borderWidth / 2f, corner, mPaintBorder);
                     break;
                 case TOP_RIGHT:
                     break;
