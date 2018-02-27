@@ -20,11 +20,7 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.util.TypedValue;
 import android.widget.ImageView;
-
-import static com.example.tb.timageview.BaseImageView.OtherType.HEXAGON;
 
 /**
  * @auther tb
@@ -138,7 +134,6 @@ public class BaseImageView extends ImageView {
     }
     
     private void init() {
-        setBackgroundColor(Color.YELLOW);
 //        setScaleType(ScaleType.CENTER_CROP);//由于下面是自己绘制，所以该属性失效
         mMatrix = new Matrix();
         mPaintDrawable = new Paint();
@@ -612,13 +607,5 @@ public class BaseImageView extends ImageView {
     
     public float getBlurRadius() {
         return blurRadius;
-    }
-    
-    private float cos(int num) {
-        return (float) Math.cos(num * Math.PI / 180);
-    }
-    
-    private float sin(int num) {
-        return (float) Math.sin(num * Math.PI / 180);
     }
 }
