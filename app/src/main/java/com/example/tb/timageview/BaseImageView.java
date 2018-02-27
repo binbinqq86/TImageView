@@ -24,11 +24,12 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.widget.ImageView;
 
+import static com.example.tb.timageview.BaseImageView.OtherType.HEXAGON;
+
 /**
  * @auther tb
  * @time 2018/2/24 上午10:50
  * @desc 圆形，圆角，带边框，高斯模糊。。。
- * TODO 椭圆、利用path绘制各种图案的待加入。。。
  * <a href="http://blog.csdn.net/binbinqq86/article/details/78329238">另外一种绘制方式</a>
  */
 @SuppressLint("AppCompatCustomView")
@@ -37,7 +38,7 @@ public class BaseImageView extends ImageView {
     /**
      * 圆角半径
      */
-    private float corner;
+    private float cornerRadius;
     /**
      * 边框宽度
      */
@@ -47,9 +48,9 @@ public class BaseImageView extends ImageView {
      */
     private int borderColor, defaultColor;//具体颜色值，非资源id
     /**
-     * 是否圆形，有无边框，高斯模糊
+     * 是否圆形，有无边框，高斯模糊，椭圆
      */
-    private boolean isCircle, hasBorder, isBlur;
+    private boolean isCircle, hasBorder, isBlur, isOval;
     /**
      * 高斯模糊半径
      */
@@ -80,6 +81,15 @@ public class BaseImageView extends ImageView {
     
     private CornerType cornerType = null;
     
+    /**
+     * 其他类型，如五角星，小熊，六边形等等不规则的
+     */
+    public enum OtherType {
+        STAR, BEAR, HEXAGON
+    }
+    
+    private OtherType otherType;
+    
     public BaseImageView(Context context) {
         super(context);
         init();
@@ -108,7 +118,10 @@ public class BaseImageView extends ImageView {
             int ct = a.getInteger(R.styleable.baselib_BaseImageView_baselib_corner_type, 0);
             cornerType = getCornerType(ct);
             
-            corner = a.getDimension(R.styleable.baselib_BaseImageView_baselib_corner, 0);
+            int ot = a.getInteger(R.styleable.baselib_BaseImageView_baselib_other_type, 0);
+            otherType = getOtherType(ot);
+            
+            cornerRadius = a.getDimension(R.styleable.baselib_BaseImageView_baselib_corner_radius, 0);
             blurRadius = a.getDimension(R.styleable.baselib_BaseImageView_baselib_blur_radius, 0);
             
             borderWidth = a.getDimension(R.styleable.baselib_BaseImageView_baselib_border_width, 0);
@@ -118,6 +131,7 @@ public class BaseImageView extends ImageView {
             isCircle = a.getBoolean(R.styleable.baselib_BaseImageView_baselib_is_circle, false);
             hasBorder = a.getBoolean(R.styleable.baselib_BaseImageView_baselib_has_border, false);
             isBlur = a.getBoolean(R.styleable.baselib_BaseImageView_baselib_is_blur, false);
+            isOval = a.getBoolean(R.styleable.baselib_BaseImageView_baselib_is_oval, false);
         } finally {
             a.recycle();
         }
@@ -183,7 +197,7 @@ public class BaseImageView extends ImageView {
         } else if (cornerType != null) {
             //corner为圆心到视图边缘的距离，也就是这个圆角的半径，
             //所以里面的图片的圆角的半径为corner减去边框宽度，因为二者圆心一致，这样才能平行画圆
-            float cr = corner - borderWidth;
+            float cr = cornerRadius - borderWidth;
             cr = cr > 0 ? cr : 0;
             switch (cornerType) {
                 case ALL:
@@ -195,7 +209,7 @@ public class BaseImageView extends ImageView {
                     } else {
                         RectF rf = new RectF(0, 0, width, height);
                         //corner为圆心到边缘的距离
-                        canvas.drawRoundRect(rf, corner, corner, mPaintDrawable);
+                        canvas.drawRoundRect(rf, cornerRadius, cornerRadius, mPaintDrawable);
                     }
                     break;
                 case TOP_LEFT:
@@ -211,14 +225,14 @@ public class BaseImageView extends ImageView {
 //                        canvas.drawPath(path,mPaintDrawable);
 
 //                        canvas.drawRoundRect(new RectF(borderWidth, borderWidth, cr * 2f+borderWidth, cr * 2f+borderWidth),cr,cr,mPaintDrawable);
-                        canvas.drawArc(new RectF(borderWidth, borderWidth, corner * 2f - borderWidth, cr * 2f + borderWidth), 180, 90, true, mPaintDrawable);
-                        canvas.drawRect(new RectF(borderWidth, corner, corner, height - borderWidth), mPaintDrawable);
-                        canvas.drawRect(new RectF(corner, borderWidth, width - borderWidth, height - borderWidth), mPaintDrawable);
+                        canvas.drawArc(new RectF(borderWidth, borderWidth, cornerRadius * 2f - borderWidth, cr * 2f + borderWidth), 180, 90, true, mPaintDrawable);
+                        canvas.drawRect(new RectF(borderWidth, cornerRadius, cornerRadius, height - borderWidth), mPaintDrawable);
+                        canvas.drawRect(new RectF(cornerRadius, borderWidth, width - borderWidth, height - borderWidth), mPaintDrawable);
                     } else {
                         //drawRoundRect也可以，不过多绘制了一部分圆
-                        canvas.drawRoundRect(new RectF(0, 0, corner * 2f, corner * 2f), corner, corner, mPaintDrawable);
-                        canvas.drawRect(new RectF(0, corner, corner, height), mPaintDrawable);
-                        canvas.drawRect(new RectF(corner, 0, width, height), mPaintDrawable);
+                        canvas.drawRoundRect(new RectF(0, 0, cornerRadius * 2f, cornerRadius * 2f), cornerRadius, cornerRadius, mPaintDrawable);
+                        canvas.drawRect(new RectF(0, cornerRadius, cornerRadius, height), mPaintDrawable);
+                        canvas.drawRect(new RectF(cornerRadius, 0, width, height), mPaintDrawable);
                     }
                     break;
                 case TOP_RIGHT:
@@ -248,6 +262,31 @@ public class BaseImageView extends ImageView {
                 case TOP_RIGHT_BOTTOM_RIGHT_BOTTOM_LEFT:
                     break;
             }
+        } else if (isOval) {
+            RectF rf = hasBorder ? new RectF(borderWidth, borderWidth, (float) Math.ceil(width - borderWidth), (float) Math.ceil(height - borderWidth)) : new RectF(0, 0, width, height);
+            canvas.drawOval(rf, mPaintDrawable);
+        } else if (otherType != null) {
+            switch (otherType) {
+                case STAR:
+                    break;
+                case BEAR:
+                    break;
+                case HEXAGON:
+                    if (hasBorder) {
+                    
+                    } else {
+                        path.reset();
+                        path.moveTo(width * 0.25f, 0);
+                        path.lineTo(width * 0.75f, 0);
+                        path.lineTo(width, height * 0.5f);
+                        path.lineTo(width * 0.75f, height);
+                        path.lineTo(width * 0.25f, height);
+                        path.lineTo(0, height * 0.5f);
+                        path.close();
+                        canvas.drawPath(path, mPaintDrawable);
+                    }
+                    break;
+            }
         } else {
             //矩形
             RectF rf = hasBorder ? new RectF(borderWidth, borderWidth, (float) Math.ceil(width - borderWidth), (float) Math.ceil(height - borderWidth)) : new RectF(0, 0, width, height);
@@ -261,7 +300,7 @@ public class BaseImageView extends ImageView {
             canvas.drawCircle(width / 2f, height / 2f, (width - borderWidth) / 2f, mPaintBorder);
         } else if (cornerType != null) {
             //半径为圆心到边框中点的距离（空心的情况，圆弧的半径到线宽的中点，而不是边缘!!!）
-            float cr = corner - borderWidth / 2f;
+            float cr = cornerRadius - borderWidth / 2f;
             cr = cr > 0 ? cr : 0;
             switch (cornerType) {
                 case ALL:
@@ -280,11 +319,11 @@ public class BaseImageView extends ImageView {
 //                    path.close();
 //                    canvas.drawPath(path, mPaintBorder);
                     
-                    canvas.drawArc(new RectF(borderWidth / 2f, borderWidth / 2f, corner * 2f - borderWidth / 2f, corner * 2f - borderWidth / 2f), 180, 90, false, mPaintBorder);
-                    canvas.drawLine(corner, borderWidth / 2f, width, borderWidth / 2f, mPaintBorder);
+                    canvas.drawArc(new RectF(borderWidth / 2f, borderWidth / 2f, cornerRadius * 2f - borderWidth / 2f, cornerRadius * 2f - borderWidth / 2f), 180, 90, false, mPaintBorder);
+                    canvas.drawLine(cornerRadius, borderWidth / 2f, width, borderWidth / 2f, mPaintBorder);
                     canvas.drawLine(width - borderWidth / 2f, borderWidth, width - borderWidth / 2f, height, mPaintBorder);
                     canvas.drawLine(width - borderWidth, height - borderWidth / 2f, 0, height - borderWidth / 2f, mPaintBorder);
-                    canvas.drawLine(borderWidth / 2f, height - borderWidth, borderWidth / 2f, corner, mPaintBorder);
+                    canvas.drawLine(borderWidth / 2f, height - borderWidth, borderWidth / 2f, cornerRadius, mPaintBorder);
                     break;
                 case TOP_RIGHT:
                     break;
@@ -311,6 +350,18 @@ public class BaseImageView extends ImageView {
                 case TOP_LEFT_BOTTOM_RIGHT_BOTTOM_LEFT:
                     break;
                 case TOP_RIGHT_BOTTOM_RIGHT_BOTTOM_LEFT:
+                    break;
+            }
+        } else if (isOval) {
+            RectF rf = new RectF(borderWidth / 2f, borderWidth / 2f, width - borderWidth / 2f, height - borderWidth / 2f);
+            canvas.drawOval(rf, mPaintBorder);
+        } else if (otherType != null) {
+            switch (otherType) {
+                case STAR:
+                    break;
+                case BEAR:
+                    break;
+                case HEXAGON:
                     break;
             }
         } else {
@@ -407,6 +458,18 @@ public class BaseImageView extends ImageView {
         //TODO 状态保存和恢复
     }
     
+    private OtherType getOtherType(int ot) {
+        switch (ot) {
+            case 1:
+                return OtherType.STAR;
+            case 2:
+                return OtherType.BEAR;
+            case 3:
+                return OtherType.HEXAGON;
+        }
+        return null;
+    }
+    
     private CornerType getCornerType(int ct) {
         switch (ct) {
             case 1234:
@@ -452,8 +515,8 @@ public class BaseImageView extends ImageView {
     }
     
     //set get==================================================================
-    public BaseImageView setCorner(float corner) {
-        this.corner = corner;
+    public BaseImageView setCornerRadius(float cornerRadius) {
+        this.cornerRadius = cornerRadius;
         return this;
     }
     
@@ -497,12 +560,30 @@ public class BaseImageView extends ImageView {
         return this;
     }
     
+    public BaseImageView setOval(boolean oval) {
+        isOval = oval;
+        return this;
+    }
+    
+    public BaseImageView setOtherType(OtherType otherType) {
+        this.otherType = otherType;
+        return this;
+    }
+    
+    public OtherType getOtherType() {
+        return otherType;
+    }
+    
+    public boolean isOval() {
+        return isOval;
+    }
+    
     public CornerType getCornerType() {
         return cornerType;
     }
     
-    public float getCorner() {
-        return corner;
+    public float getCornerRadius() {
+        return cornerRadius;
     }
     
     public float getBorderWidth() {
@@ -531,5 +612,13 @@ public class BaseImageView extends ImageView {
     
     public float getBlurRadius() {
         return blurRadius;
+    }
+    
+    private float cos(int num) {
+        return (float) Math.cos(num * Math.PI / 180);
+    }
+    
+    private float sin(int num) {
+        return (float) Math.sin(num * Math.PI / 180);
     }
 }

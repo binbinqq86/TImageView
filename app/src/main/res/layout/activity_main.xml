@@ -9,18 +9,18 @@
     
     <CheckBox
         android:id="@+id/cb"
-        android:visibility="visible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="hasBorder"
+        android:visibility="visible"
         app:layout_constraintTop_toTopOf="parent"/>
     
     <HorizontalScrollView
-        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:visibility="visible"
         app:layout_constraintTop_toBottomOf="@id/cb">
         
         <LinearLayout
@@ -47,6 +47,27 @@
                 android:layout_height="wrap_content"
                 android:text="corner1"
                 android:textAllCaps="false"/>
+            
+            <Button
+                android:id="@+id/oval_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="oval1"
+                android:textAllCaps="false"/>
+            
+            <Button
+                android:id="@+id/oval_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="oval2"
+                android:textAllCaps="false"/>
+            
+            <Button
+                android:id="@+id/hexagon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hexagon"
+                android:textAllCaps="false"/>
         </LinearLayout>
     </HorizontalScrollView>
     
@@ -62,13 +83,13 @@
         app:layout_constraintTop_toTopOf="parent"
         biv:baselib_border_color="#aa1cD1FF"
         biv:baselib_border_width="10dp"
-        biv:baselib_corner="60dp"
-        biv:baselib_corner_type="ALL"
-        biv:baselib_has_border="false"/>
+        biv:baselib_corner_radius="60dp"
+        biv:baselib_has_border="false"
+        biv:baselib_other_type="HEXAGON"/>
     
     <com.example.tb.timageview.Test
-        android:visibility="gone"
-        android:background="@color/colorAccent"
         android:layout_width="300dp"
-        android:layout_height="300dp"/>
+        android:layout_height="300dp"
+        android:background="@color/colorAccent"
+        android:visibility="gone"/>
 </android.support.constraint.ConstraintLayout>
