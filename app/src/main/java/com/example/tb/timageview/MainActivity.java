@@ -11,7 +11,7 @@ import android.widget.CompoundButton;
 
 public class MainActivity extends AppCompatActivity {
 
-    private CheckBox cb;
+    private CheckBox cb,hasBlur;
     private Button circle;
     private Button cornerAll,corner1,oval1,oval2,hexagon;
     private BaseImageView biv;
@@ -25,6 +25,9 @@ public class MainActivity extends AppCompatActivity {
         if(biv.isHasBorder()){
             cb.setChecked(true);
         }
+        if(biv.isBlur()){
+            hasBlur.setChecked(true);
+        }
         cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -32,6 +35,17 @@ public class MainActivity extends AppCompatActivity {
                     biv.setHasBorder(true);
                 }else{
                     biv.setHasBorder(false);
+                }
+                biv.reDraw();
+            }
+        });
+        hasBlur.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    biv.setBlur(true);
+                }else{
+                    biv.setBlur(false);
                 }
                 biv.reDraw();
             }
@@ -99,13 +113,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        cb = (CheckBox) findViewById(R.id.cb);
-        circle = (Button) findViewById(R.id.circle);
-        corner1 = (Button) findViewById(R.id.corner_1);
-        cornerAll = (Button) findViewById(R.id.corner_all);
-        biv = (BaseImageView) findViewById(R.id.biv);
+        cb = findViewById(R.id.cb);
+        circle = findViewById(R.id.circle);
+        corner1 = findViewById(R.id.corner_1);
+        cornerAll = findViewById(R.id.corner_all);
+        biv = findViewById(R.id.biv);
         oval1=findViewById(R.id.oval_1);
         oval2=findViewById(R.id.oval_2);
         hexagon=findViewById(R.id.hexagon);
+        hasBlur=findViewById(R.id.blur);
     }
 }

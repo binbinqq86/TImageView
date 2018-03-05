@@ -16,11 +16,16 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.widget.ImageView;
+
+import com.example.tb.timageview.internal.FastBlur;
+import com.example.tb.timageview.internal.RSBlur;
 
 /**
  * @auther tb
@@ -118,7 +123,7 @@ public class BaseImageView extends ImageView {
             otherType = getOtherType(ot);
             
             cornerRadius = a.getDimension(R.styleable.baselib_BaseImageView_baselib_corner_radius, 0);
-            blurRadius = a.getDimension(R.styleable.baselib_BaseImageView_baselib_blur_radius, 0);
+            blurRadius = a.getFloat(R.styleable.baselib_BaseImageView_baselib_blur_radius, 0);
             
             borderWidth = a.getDimension(R.styleable.baselib_BaseImageView_baselib_border_width, 0);
             borderColor = a.getColor(R.styleable.baselib_BaseImageView_baselib_border_color, 0);
@@ -427,7 +432,7 @@ public class BaseImageView extends ImageView {
     private Bitmap getBitmap(Drawable drawable) {
         Bitmap bitmap = null;
         if (drawable instanceof BitmapDrawable) {
-            return ((BitmapDrawable) drawable).getBitmap();
+            bitmap = ((BitmapDrawable) drawable).getBitmap();
         } else if (drawable instanceof ColorDrawable) {
             bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
             Canvas c = new Canvas(bitmap);
@@ -438,19 +443,66 @@ public class BaseImageView extends ImageView {
             Canvas c = new Canvas(bitmap);
             c.drawARGB(Color.alpha(defaultColor), Color.red(defaultColor), Color.green(defaultColor), Color.blue(defaultColor));
         }
+        if (isBlur) {
+            //高斯模糊
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                try {
+                    bitmap = RSBlur.blur(getContext(), bitmap, (int) blurRadius);
+                } catch (Exception e) {
+                    bitmap = FastBlur.blur(bitmap, (int) blurRadius, true);
+                }
+            } else {
+                bitmap = FastBlur.blur(bitmap, (int) blurRadius, true);
+            }
+        }
         return bitmap;
     }
     
     @Nullable
     @Override
     protected Parcelable onSaveInstanceState() {
-        return super.onSaveInstanceState();
+        super.onSaveInstanceState();
+        //状态保存
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("hasBorder", hasBorder);
+        bundle.putBoolean("isCircle", isCircle);
+        bundle.putBoolean("isBlur", isBlur);
+        bundle.putBoolean("isOval", isOval);
+        
+        bundle.putFloat("cornerRadius", cornerRadius);
+        bundle.putFloat("borderWidth", borderWidth);
+        bundle.putFloat("blurRadius", blurRadius);
+        
+        bundle.putInt("borderColor", borderColor);
+        bundle.putInt("defaultColor", defaultColor);
+        
+        bundle.putSerializable("otherType", otherType);
+        bundle.putSerializable("cornerType", cornerType);
+        return bundle;
     }
     
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
         super.onRestoreInstanceState(state);
-        //TODO 状态保存和恢复
+        //状态恢复
+        if (state instanceof Bundle) {
+            Bundle bundle = (Bundle) state;
+            setHasBorder(bundle.getBoolean("hasBorder"));
+            setCircle(bundle.getBoolean("isCircle"));
+            setBlur(bundle.getBoolean("isBlur"));
+            setOval(bundle.getBoolean("isOval"));
+            
+            setCornerRadius(bundle.getFloat("cornerRadius"));
+            setBorderWidth(bundle.getFloat("borderWidth"));
+            setBlurRadius(bundle.getFloat("blurRadius"));
+            
+            setBorderColor(bundle.getInt("borderColor"));
+            setDefaultColor(bundle.getInt("defaultColor"));
+            
+            setOtherType((OtherType) bundle.getSerializable("otherType"));
+            setCornerType((CornerType) bundle.getSerializable("cornerType"));
+        }
+        reDraw();
     }
     
     private OtherType getOtherType(int ot) {
@@ -520,12 +572,12 @@ public class BaseImageView extends ImageView {
         return this;
     }
     
-    public BaseImageView setBorderColor(int borderColor) {
+    public BaseImageView setBorderColor(@ColorInt int borderColor) {
         this.borderColor = borderColor;
         return this;
     }
     
-    public BaseImageView setDefaultColor(int defaultColor) {
+    public BaseImageView setDefaultColor(@ColorInt int defaultColor) {
         this.defaultColor = defaultColor;
         return this;
     }

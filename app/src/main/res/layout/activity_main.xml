@@ -16,6 +16,16 @@
         android:visibility="visible"
         app:layout_constraintTop_toTopOf="parent"/>
     
+    <CheckBox
+        android:id="@+id/blur"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="hasBlur"
+        android:textAllCaps="false"
+        app:layout_constraintLeft_toRightOf="@id/cb"
+        app:layout_constraintTop_toTopOf="parent"/>
+    
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -68,6 +78,7 @@
                 android:layout_height="wrap_content"
                 android:text="Hexagon"
                 android:textAllCaps="false"/>
+        
         </LinearLayout>
     </HorizontalScrollView>
     
@@ -75,18 +86,19 @@
         android:id="@+id/biv"
         android:layout_width="300dp"
         android:layout_height="300dp"
+        android:background="#ff5500"
         android:src="@drawable/p2"
         android:visibility="visible"
-        android:background="#ff5500"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        biv:baselib_blur_radius="20"
         biv:baselib_border_color="#aa1cD1FF"
         biv:baselib_border_width="10dp"
         biv:baselib_corner_radius="60dp"
         biv:baselib_has_border="false"
-        biv:baselib_other_type="HEXAGON"/>
+        biv:baselib_is_blur="true"/>
     
     <com.example.tb.timageview.Test
         android:layout_width="300dp"
