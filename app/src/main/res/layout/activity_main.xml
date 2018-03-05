@@ -98,7 +98,7 @@
         biv:baselib_border_width="10dp"
         biv:baselib_corner_radius="60dp"
         biv:baselib_has_border="false"
-        biv:baselib_is_blur="true"/>
+        biv:baselib_is_blur="false"/>
     
     <com.example.tb.timageview.Test
         android:layout_width="300dp"
