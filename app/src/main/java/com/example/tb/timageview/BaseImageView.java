@@ -17,6 +17,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
@@ -461,48 +462,101 @@ public class BaseImageView extends ImageView {
     @Nullable
     @Override
     protected Parcelable onSaveInstanceState() {
-        super.onSaveInstanceState();
-        //状态保存
-        Bundle bundle = new Bundle();
-        bundle.putBoolean("hasBorder", hasBorder);
-        bundle.putBoolean("isCircle", isCircle);
-        bundle.putBoolean("isBlur", isBlur);
-        bundle.putBoolean("isOval", isOval);
-        
-        bundle.putFloat("cornerRadius", cornerRadius);
-        bundle.putFloat("borderWidth", borderWidth);
-        bundle.putFloat("blurRadius", blurRadius);
-        
-        bundle.putInt("borderColor", borderColor);
-        bundle.putInt("defaultColor", defaultColor);
-        
-        bundle.putSerializable("otherType", otherType);
-        bundle.putSerializable("cornerType", cornerType);
-        return bundle;
+        Parcelable superState = super.onSaveInstanceState();
+        SavedState savedState = new SavedState(superState);
+        savedState.cornerRadius = cornerRadius;
+        savedState.isCircle = isCircle;
+        savedState.cornerType = cornerType;
+        savedState.otherType = otherType;
+        savedState.blurRadius = blurRadius;
+        savedState.borderColor = borderColor;
+        savedState.defaultColor = defaultColor;
+        savedState.borderWidth = borderWidth;
+        savedState.hasBorder = hasBorder;
+        savedState.isBlur = isBlur;
+        savedState.isOval = isOval;
+        return savedState;
     }
     
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
-        super.onRestoreInstanceState(state);
-        //状态恢复
-        if (state instanceof Bundle) {
-            Bundle bundle = (Bundle) state;
-            setHasBorder(bundle.getBoolean("hasBorder"));
-            setCircle(bundle.getBoolean("isCircle"));
-            setBlur(bundle.getBoolean("isBlur"));
-            setOval(bundle.getBoolean("isOval"));
-            
-            setCornerRadius(bundle.getFloat("cornerRadius"));
-            setBorderWidth(bundle.getFloat("borderWidth"));
-            setBlurRadius(bundle.getFloat("blurRadius"));
-            
-            setBorderColor(bundle.getInt("borderColor"));
-            setDefaultColor(bundle.getInt("defaultColor"));
-            
-            setOtherType((OtherType) bundle.getSerializable("otherType"));
-            setCornerType((CornerType) bundle.getSerializable("cornerType"));
+        if (state == null) {
+            super.onRestoreInstanceState(state);
+            return;
         }
+        SavedState savedState = (SavedState) state;
+        super.onRestoreInstanceState(savedState.getSuperState());
+        
+        setHasBorder(savedState.hasBorder);
+        setCircle(savedState.isCircle);
+        setBlur(savedState.isBlur);
+        setOval(savedState.isOval);
+        
+        setCornerRadius(savedState.cornerRadius);
+        setBorderWidth(savedState.borderWidth);
+        setBlurRadius(savedState.blurRadius);
+        
+        setBorderColor(savedState.borderColor);
+        setDefaultColor(savedState.defaultColor);
+        
+        setOtherType(savedState.otherType);
+        setCornerType(savedState.cornerType);
         reDraw();
+    }
+    
+    static class SavedState extends BaseSavedState {
+        int borderColor, defaultColor;
+        OtherType otherType;
+        CornerType cornerType;
+        boolean isCircle, hasBorder, isBlur, isOval;
+        float cornerRadius, borderWidth, blurRadius;
+        
+        public SavedState(Parcelable superState) {
+            super(superState);
+        }
+        
+        private SavedState(Parcel in) {
+            super(in);
+            borderColor = in.readInt();
+            defaultColor = in.readInt();
+            otherType = (OtherType) in.readSerializable();
+            cornerType = (CornerType) in.readSerializable();
+            isCircle = in.readByte() != 0;
+            hasBorder = in.readByte() != 0;
+            isBlur = in.readByte() != 0;
+            isOval = in.readByte() != 0;
+            cornerRadius = in.readFloat();
+            borderWidth = in.readFloat();
+            blurRadius = in.readFloat();
+        }
+        
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            super.writeToParcel(dest, flags);
+            dest.writeInt(borderColor);
+            dest.writeInt(defaultColor);
+            dest.writeSerializable(otherType);
+            dest.writeSerializable(cornerType);
+            dest.writeByte((byte) (isCircle == true ? 1 : 0));
+            dest.writeByte((byte) (hasBorder == true ? 1 : 0));
+            dest.writeByte((byte) (isBlur == true ? 1 : 0));
+            dest.writeByte((byte) (isOval == true ? 1 : 0));
+            dest.writeFloat(cornerRadius);
+            dest.writeFloat(borderWidth);
+            dest.writeFloat(blurRadius);
+        }
+        
+        public static final Creator<SavedState> CREATOR = new Creator<SavedState>() {
+            @Override
+            public SavedState createFromParcel(Parcel in) {
+                return new SavedState(in);
+            }
+            
+            @Override
+            public SavedState[] newArray(int size) {
+                return new SavedState[size];
+            }
+        };
     }
     
     private OtherType getOtherType(int ot) {
