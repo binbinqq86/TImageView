@@ -480,12 +480,14 @@ public class BaseImageView extends ImageView {
     
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
-        if (state == null) {
+        if (state == null || !(state instanceof SavedState)) {
             super.onRestoreInstanceState(state);
             return;
         }
+        
         SavedState savedState = (SavedState) state;
-        super.onRestoreInstanceState(savedState.getSuperState());
+        //6.0以后源码里面为AbsSavedState子类即可，6.0之前必须严格相等
+        super.onRestoreInstanceState(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? savedState : savedState.getSuperState());
         
         setHasBorder(savedState.hasBorder);
         setCircle(savedState.isCircle);
